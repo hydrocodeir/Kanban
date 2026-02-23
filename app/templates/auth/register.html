@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5" style="max-width:420px;">
+  <div class="card shadow-sm"><div class="card-body">
+    <h1 class="h4 mb-3">ثبت‌نام</h1>
+    {% if error %}<div class="alert alert-danger">{{ error }}</div>{% endif %}
+    <form method="post" action="/register">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="mb-3"><label class="form-label">نام کاربری</label><input class="form-control" name="username" required></div>
+      <div class="mb-3"><label class="form-label">رمز عبور</label><input type="password" class="form-control" name="password" required></div>
+      <button class="btn btn-success w-100">ایجاد حساب</button>
+    </form>
+    <a href="/login" class="d-block mt-3">بازگشت به ورود</a>
+  </div></div>
+</div>
+{% endblock %}
