@@ -1,47 +1,36 @@
+version: '3.9'
 services:
-  mysql:
-    image: mariadb:10.11
-    container_name: kanban-mysql
+  app:
+    build: .
     environment:
-      MARIADB_ROOT_PASSWORD: root
-      MARIADB_DATABASE: kanban_db
-      MARIADB_USER: kanban
-      MARIADB_PASSWORD: kanban
+      DATABASE_URL: mysql+pymysql://kanban:kanban@mysql:3306/kanban?charset=utf8mb4
+      SECRET_KEY: super-secret-change
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+    depends_on:
+      - mysql
+    expose:
+      - "8000"
+
+  mysql:
+    image: mysql:8.4
+    restart: always
+    environment:
+      MYSQL_DATABASE: kanban
+      MYSQL_USER: kanban
+      MYSQL_PASSWORD: kanban
+      MYSQL_ROOT_PASSWORD: rootpassword
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
-      - ./sample_data.sql:/docker-entrypoint-initdb.d/02_sample_data.sql:ro
-    healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-proot"]
-      interval: 5s
-      timeout: 3s
-      retries: 30
-    restart: unless-stopped
-  redis:
-    image: redis:7
-    container_name: kanban-redis
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 30
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
 
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: kanban-web
-    env_file:
-      - .env.docker
-    ports:
-      - "127.0.0.1:8000:8000"
+  nginx:
+    image: nginx:1.27-alpine
     depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    restart: unless-stopped
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
 
 volumes:
   mysql_data:
