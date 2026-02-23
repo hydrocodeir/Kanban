@@ -1,0 +1,111 @@
+{% set p = task.priority %}
+<div class="task-card card mb-2 prio-{{ p }}" id="task-{{ task.id }}" data-task-id="{{ task.id }}" data-id="{{ task.id }}">
+  <div class="card-body p-2">
+    <div class="d-flex align-items-start justify-content-between gap-2">
+      <div class="flex-grow-1">
+        <div class="fw-semibold task-title">{{ task.title }}</div>
+        {% if task.description %}
+          <div class="text-muted small mt-1 task-desc">{{ task.description }}</div>
+        {% endif %}
+      </div>
+
+      <div class="d-flex gap-1 task-actions">
+        <button class="btn btn-sm btn-light icon-btn"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#editTask-{{ task.id }}"
+          aria-expanded="false"
+          title="ویرایش"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+
+        <button class="btn btn-sm btn-light icon-btn"
+          hx-delete="/htmx/tasks/{{ task.id }}"
+          hx-target="#task-{{ task.id }}"
+          hx-swap="outerHTML"
+          hx-confirm="این وظیفه حذف شود؟"
+          hx-on::after-request="window.KanbanUI && KanbanUI.updateCounts && KanbanUI.updateCounts();"
+          title="حذف"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+
+    
+    <div class="collapse mt-2" id="editTask-{{ task.id }}">
+      <div class="task-edit-box p-2">
+        <form class="d-flex flex-column gap-2"
+              hx-put="/htmx/tasks/{{ task.id }}"
+              hx-target="#task-{{ task.id }}"
+              hx-swap="outerHTML"
+              hx-on::after-request="window.KanbanUI && KanbanUI.closeCollapse('editTask-{{ task.id }}'); window.KanbanUI && KanbanUI.updateCounts && KanbanUI.updateCounts();">
+          <input name="title" class="form-control form-control-sm" value="{{ task.title }}" required>
+
+          <div class="d-flex gap-2">
+            <select name="priority" class="form-select form-select-sm">
+              <option value="1" {% if task.priority==1 %}selected{% endif %}>اولویت: کم</option>
+              <option value="2" {% if task.priority==2 %}selected{% endif %}>اولویت: متوسط</option>
+              <option value="3" {% if task.priority==3 %}selected{% endif %}>اولویت: زیاد</option>
+            </select>
+
+            <div class="w-100">
+              <input type="text" class="form-control form-control-sm jalali-date" placeholder="سررسید (شمسی)"
+                     data-target="due-edit-{{ task.id }}" autocomplete="off">
+              <input type="hidden" name="due_date" id="due-edit-{{ task.id }}" value="{{ task.due_date if task.due_date else '' }}">
+            </div>
+          </div>
+
+          
+          <select name="assignee_id" class="form-select form-select-sm">
+            <option value="">انجام‌دهنده: بدون انتخاب</option>
+            {% set _users = users if users is defined else (board.users if board is defined else []) %}
+            {% for u in _users %}
+              <option value="{{ u.id }}" {% if task.assignee_id == u.id %}selected{% endif %}>{{ u.full_name }}</option>
+            {% endfor %}
+          </select>
+
+          <textarea name="description" class="form-control form-control-sm" rows="2"
+                    placeholder="توضیح کوتاه (اختیاری)">{{ task.description if task.description else '' }}</textarea>
+
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-primary flex-grow-1" type="submit">ذخیره</button>
+            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#editTask-{{ task.id }}">انصراف</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+<div class="d-flex align-items-center justify-content-between mt-2">
+      <div class="d-flex gap-2 align-items-center flex-wrap task-meta">
+        <span class="badge rounded-pill {% if p==3 %}text-bg-danger{% elif p==2 %}text-bg-warning{% else %}text-bg-secondary{% endif %}">
+          {% if p==3 %}زیاد{% elif p==2 %}متوسط{% else %}کم{% endif %}
+        </span>
+        
+        {% set _assignee_name = None %}
+        {% if task.assignee_name is defined and task.assignee_name %}{% set _assignee_name = task.assignee_name %}{% endif %}
+        {% if (not _assignee_name) and task.assignee_id and users is defined %}
+          {% for u in users %}{% if u.id == task.assignee_id %}{% set _assignee_name = u.full_name %}{% endif %}{% endfor %}
+        {% endif %}
+        {% if (not _assignee_name) and task.assignee_id and board is defined %}
+          {% for u in board.users %}{% if u.id == task.assignee_id %}{% set _assignee_name = u.full_name %}{% endif %}{% endfor %}
+        {% endif %}
+        {% if _assignee_name %}
+          <span class="badge rounded-pill text-bg-info assignee-badge">
+            <i class="bi bi-person"></i>
+            {{ _assignee_name }}
+          </span>
+        {% endif %}
+        {% if task.due_date %}
+          <span class="small text-muted due-date" data-greg="{{ task.due_date }}">
+            <i class="bi bi-calendar2-week"></i>
+            <span class="due-date-text">{{ task.due_date }}</span>
+            <span class="badge rounded-pill text-bg-light ms-1 due-remaining" data-greg="{{ task.due_date }}"></span>
+          </span>
+        {% endif %}
+      </div>
+      <span class="small text-muted task-status">{{ task.status }}</span>
+    </div>
+  </div>
+</div>

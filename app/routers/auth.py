@@ -43,8 +43,8 @@ def login(
 
 
 @router.post('/logout')
-def logout(request: Request, response: Response, db: Session = Depends(get_db)):
-    token = request.cookies.get('access_token')
+def logout(response: Response, db: Session = Depends(get_db), request: Request | None = None):
+    token = request.cookies.get('access_token') if request else None
     if token:
         user_id = decode_token(token)
         if user_id:
