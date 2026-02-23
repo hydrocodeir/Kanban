@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
@@ -29,6 +28,7 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
 @router.post('/login', response_model=TokenResponse)
 def login(
     request: Request,
+    response: Response,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
@@ -37,19 +37,17 @@ def login(
     if not user or not verify_password(form_data.password, user.password_hash):
         raise HTTPException(status_code=401, detail='نام کاربری یا رمز عبور اشتباه است')
     token = create_access_token(str(user.id))
-    response = JSONResponse(content=TokenResponse(access_token=token).model_dump())
     response.set_cookie('access_token', token, httponly=True, samesite='lax', secure=False)
     log_action(db, user.id, 'login', 'user', user.id)
-    return response
+    return TokenResponse(access_token=token)
 
 
-@router.post('/logout', response_model=None, status_code=200)
-def logout(request: Request, db: Session = Depends(get_db)) -> JSONResponse:
-    token = request.cookies.get('access_token')
+@router.post('/logout')
+def logout(response: Response, db: Session = Depends(get_db), request: Request | None = None):
+    token = request.cookies.get('access_token') if request else None
     if token:
         user_id = decode_token(token)
         if user_id:
             log_action(db, int(user_id), 'logout', 'user', int(user_id))
-    response = JSONResponse(content={'message': 'خروج با موفقیت انجام شد'})
     response.delete_cookie('access_token')
-    return response
+    return {'message': 'خروج با موفقیت انجام شد'}
