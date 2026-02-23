@@ -97,7 +97,7 @@ def register_form(
     return RedirectResponse('/login', status_code=303)
 
 
-@router.post('/logout', response_model=None)
+@router.post('/logout')
 def logout() -> RedirectResponse:
     response = RedirectResponse('/login', status_code=303)
     response.delete_cookie('access_token')

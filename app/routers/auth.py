@@ -42,9 +42,9 @@ def login(
     return TokenResponse(access_token=token)
 
 
-@router.post('/logout', response_model=None)
-def logout(request: Request, response: Response, db: Session = Depends(get_db)):
-    token = request.cookies.get('access_token')
+@router.post('/logout')
+def logout(response: Response, db: Session = Depends(get_db), request: Request | None = None):
+    token = request.cookies.get('access_token') if request else None
     if token:
         user_id = decode_token(token)
         if user_id:

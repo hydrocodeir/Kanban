@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if not project %}
+  <div class="mt-4 alert alert-warning">پروژه پیدا نشد.</div>
+{% else %}
+  <div class="page-header d-flex align-items-start justify-content-between mt-3">
+    <div>
+      <div class="d-flex align-items-center gap-2">
+        <a class="text-decoration-none text-muted mb-2" href="/dashboard">
+          <i class="bi bi-arrow-right"></i>
+          بازگشت
+        </a>
+      </div>
+      <h1 class="page-title mb-1">{{ project.title }}</h1>
+      <div class="text-muted">{{ project.description if project.description else "بدون توضیح" }}</div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-danger rounded-pill"
+        hx-delete="/htmx/projects/{{ project.id }}"
+        hx-confirm="این برد و تمام ستون‌ها و وظایف آن حذف شود؟"
+      >
+        <i class="bi bi-trash"></i>
+        حذف برد
+      </button>
+
+      <button class="btn btn-outline-secondary rounded-pill" data-bs-toggle="modal" data-bs-target="#addColumnModal">
+        <i class="bi bi-columns-gap"></i>
+        افزودن ستون
+      </button>
+    </div>
+  </div>
+
+  <div id="boardRoot" class="board-root mt-3" data-project-id="{{ project.id }}"
+       hx-get="/htmx/projects/{{ project.id }}/board"
+       hx-trigger="load"
+       hx-swap="innerHTML">
+    <div class="skeleton-board">
+      <div class="skeleton-col"></div>
+      <div class="skeleton-col"></div>
+      <div class="skeleton-col"></div>
+    </div>
+  </div>
+
+  <!-- Modal: Add Column -->
+  <div class="modal fade" id="addColumnModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content app-modal">
+        <div class="modal-header">
+          <h5 class="modal-title">افزودن ستون</h5>
+          <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form
+            hx-post="/htmx/projects/{{ project.id }}/columns"
+            hx-target="#boardColumnsContainer"
+            hx-swap="beforeend"
+            onsubmit="setTimeout(() => bootstrap.Modal.getInstance(document.getElementById('addColumnModal')).hide(), 50)"
+          >
+            <div class="mb-3">
+              <label class="form-label">عنوان ستون</label>
+              <input name="title" class="form-control" placeholder="مثلاً: بررسی" required>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+              <button type="button" class="btn btn-light" data-bs-dismiss="modal">انصراف</button>
+              <button class="btn btn-primary">ثبت</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endif %}
+
+{% endblock %}
