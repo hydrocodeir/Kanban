@@ -1,0 +1,25 @@
+{% extends "auth/layout.html" %}
+{% block content %}
+  <h5 class="fw-bold mb-1">ورود</h5>
+  <div class="text-muted small mb-4">برای ادامه وارد حساب کاربری خود شوید.</div>
+
+  <form method="post" action="/login" class="d-flex flex-column gap-3">
+    <div>
+      <label class="form-label small">ایمیل</label>
+      <input name="email" type="email" class="form-control" placeholder="demo@example.com" required autocomplete="email">
+    </div>
+    <div>
+      <label class="form-label small">رمز عبور</label>
+      <input name="password" type="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+    </div>
+
+    <button class="btn btn-primary w-100" type="submit">
+      ورود
+      <i class="bi bi-box-arrow-in-left ms-1"></i>
+    </button>
+  </form>
+
+  <div class="d-flex justify-content-between mt-3">
+    <a class="small" href="/register">حساب ندارید؟ ثبت‌نام</a>
+  </div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% set active_nav = 'dashboard' %}
+{% block content %}
+
+<div class="page-header d-flex align-items-center justify-content-between mt-3">
+  <div>
+    <h1 class="page-title m-1">داشبورد</h1>
+  </div>
+
+  <button class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+    <i class="bi bi-plus-lg"></i>
+    ایجاد پروژه
+  </button>
+</div>
+
+<div class="row g-3 mt-2" id="projectsGrid">
+  {% for project in projects %}
+    {% include "partials/project_card.html" %}
+  {% else %}
+    <div class="col-12">
+      <div class="empty-state">
+        <div class="empty-icon"><i class="bi bi-kanban"></i></div>
+        <div class="fw-bold">هنوز پروژه‌ای ندارید</div>
+        <div class="text-muted">با دکمه «ایجاد پروژه» شروع کنید.</div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Modal: Create Project -->
+<div class="modal fade" id="createProjectModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content app-modal">
+      <div class="modal-header">
+        <h5 class="modal-title">ایجاد پروژه جدید</h5>
+        <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form
+          hx-post="/htmx/projects"
+          hx-target="#projectsGrid"
+          hx-swap="afterbegin"
+          onsubmit="setTimeout(() => bootstrap.Modal.getInstance(document.getElementById('createProjectModal')).hide(), 50)"
+        >
+          <div class="mb-3">
+            <label class="form-label">عنوان پروژه</label>
+            <input name="title" class="form-control" placeholder="مثلاً: اپلیکیشن مدیریت فروش" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">توضیح (اختیاری)</label>
+            <textarea name="description" class="form-control" rows="3" placeholder="یک توضیح کوتاه..."></textarea>
+          </div>
+          <div class="d-flex gap-2 justify-content-end">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">انصراف</button>
+            <button class="btn btn-primary">ثبت</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

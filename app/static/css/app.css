@@ -1,0 +1,644 @@
+:root{
+  --accent: #7367f0;
+  --accent-weak: rgba(115,103,240,.12);
+  --bg: #f4f5fa;
+  --card: #ffffff;
+  --text: #2f2b3d;
+  --muted: #6f6b7d;
+  --border: rgba(34, 48, 62, 0.10);
+  --shadow: 0 6px 18px rgba(34,48,62,.08);
+  --radius: 14px;
+  --radius-sm: 12px;
+  --sidebar-w: 280px;
+}
+
+html, body{ height:100%; }
+body.app-body{
+  font-family: "Vazirmatn", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  direction: rtl;
+}
+
+/* کلی */
+a{ color: inherit; text-decoration: none; }
+.small{ letter-spacing: 0; }
+.card, .dropdown-menu, .modal-content{ text-align: right; }
+.form-control, .form-select, textarea{
+  border-radius: 12px;
+  border-color: rgba(34,48,62,.14);
+  text-align: right;
+}
+.form-control:focus, .form-select:focus{
+  border-color: rgba(115,103,240,.55);
+  box-shadow: 0 0 0 .18rem rgba(115,103,240,.12);
+}
+.btn{ border-radius: 12px; }
+.btn-primary{ background: var(--accent); border-color: var(--accent); }
+.btn-primary:hover{ background:#655be9; border-color:#655be9; }
+.btn-outline-primary{
+  color: var(--accent);
+  border-color: rgba(115,103,240,.35);
+}
+.btn-outline-primary:hover{
+  background: rgba(115,103,240,.10);
+  border-color: rgba(115,103,240,.45);
+  color: var(--accent);
+}
+.icon-btn{ border-radius: 12px; }
+
+/* Layout */
+.app-wrapper{ min-height:100vh; width:100%; }
+
+/* Sidebar (Right) */
+.app-sidebar{
+  width: var(--sidebar-w);
+  background: var(--card);
+  border-left: 1px solid var(--border);
+  padding: 18px 14px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display:flex;
+  flex-direction:column;
+}
+.sidebar-brand{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  padding: 6px 8px 10px;
+}
+.brand-mark{
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-weight:900;
+  box-shadow: 0 10px 18px rgba(115,103,240,.22);
+}
+.sidebar-nav .nav-item{
+  display:flex; align-items:center; gap:10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--text);
+  transition: background .15s ease, color .15s ease, transform .15s ease;
+}
+.sidebar-nav .nav-item:hover{
+  background: rgba(34,48,62,.04);
+  transform: translateY(-1px);
+}
+.sidebar-nav .nav-item.active{
+  background: var(--accent-weak);
+  color: var(--accent);
+  font-weight: 800;
+}
+.nav-section-title{
+  margin-top: 14px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.nav-hint{
+  padding: 6px 10px 0;
+}
+.sidebar-footer{
+  margin-top:auto;
+  padding: 12px 10px 6px;
+  border-top: 1px solid var(--border);
+}
+
+/* Navbar */
+.app-main{ min-width:0; display:flex; flex-direction:column; }
+.app-navbar{ padding: 16px 16px 0; }
+.navbar-inner{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+}
+.app-badge{
+  background: var(--accent-weak);
+  color: var(--accent);
+  border: 1px solid rgba(115,103,240,.20);
+}
+
+/* Content */
+.app-content{ padding: 16px 16px 26px; }
+
+/* Cards */
+.app-card{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.app-card .card-header{
+  background: transparent;
+  border-bottom: 1px solid rgba(34,48,62,.06);
+}
+
+/* Page headings */
+.page-title{
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+/* Board */
+.board-root{ min-height: 60vh; }
+.kanban-col{
+  width: 360px;
+  flex: 0 0 auto;
+}
+.col-dot{
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  display:inline-block;
+}
+.task-list{ min-height: 36px; }
+
+/* Task cards */
+.task-card{
+  border: 1px solid rgba(34,48,62,.12);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(34,48,62,.06);
+  cursor: grab;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+overflow: hidden;
+  }
+.task-card:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(34,48,62,.10);
+  border-color: rgba(115,103,240,.22);
+}
+.task-card:active{ cursor: grabbing; }
+
+/* Drag */
+.sortable-ghost{ opacity: .45; }
+.sortable-drag{ box-shadow: 0 14px 26px rgba(34,48,62,.18) !important; }
+
+/* HTMX subtle */
+.htmx-added{ animation: fadeUp .16s ease-out both; }
+@keyframes fadeUp{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+/* Empty state */
+.empty-state{
+  background: var(--card);
+  border: 1px dashed rgba(34,48,62,.18);
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align:center;
+}
+.empty-icon{ font-size: 34px; color: var(--accent); }
+
+/* Jalali Datepicker */
+.jdp-pop{
+  position: fixed;
+  z-index: 2000;
+  width: 290px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 10px;
+}
+.jdp-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 8px;
+  padding: 6px 6px 10px;
+  border-bottom: 1px solid rgba(34,48,62,.06);
+}
+.jdp-head .title{ font-weight: 900; font-size: 14px; }
+.jdp-btn{
+  width: 34px; height: 34px;
+  border-radius: 12px;
+  border: 1px solid rgba(34,48,62,.10);
+  background: #fff;
+}
+.jdp-grid{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding: 10px 4px 6px;
+}
+.jdp-dow{
+  font-size: 12px;
+  color: var(--muted);
+  text-align:center;
+  padding: 2px 0;
+}
+.jdp-day{
+  height: 34px;
+  border-radius: 12px;
+  border: 1px solid rgba(34,48,62,.08);
+  background: #fff;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  transition: background .12s ease, border-color .12s ease, transform .12s ease;
+  user-select:none;
+}
+.jdp-day:hover{
+  background: rgba(115,103,240,.08);
+  border-color: rgba(115,103,240,.18);
+  transform: translateY(-1px);
+}
+.jdp-day.is-today{
+  border-color: rgba(115,103,240,.35);
+}
+.jdp-day.is-selected{
+  background: var(--accent);
+  color:#fff;
+  border-color: var(--accent);
+}
+.jdp-day.is-disabled{
+  opacity: .35;
+  cursor: default;
+}
+.jdp-foot{
+  display:flex;
+  justify-content:space-between;
+  gap: 8px;
+  padding: 8px 6px 2px;
+  border-top: 1px solid rgba(34,48,62,.06);
+}
+.jdp-link{
+  font-size: 12px;
+  color: var(--accent);
+  cursor:pointer;
+}
+
+
+/* چیدمان ستون‌ها (Desktop/Tablet) */
+.board-columns-wrap{
+  direction: ltr; /* اسکرول افقی پایدار */
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 .25rem;
+}
+.board-columns{
+  direction: rtl;
+  display: flex;
+  flex-direction: row-reverse; /* ستون اول سمت راست */
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 1rem;
+}
+}
+
+
+/* فرم افزودن وظیفه */
+.task-add-box{
+  background: rgba(34,48,62,.03);
+  border: 1px solid rgba(34,48,62,.08);
+  border-radius: 12px;
+}
+.task-add-box .form-control,
+.task-add-box .form-select{
+  background: #fff;
+}
+
+.kanban-col-header{
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+
+
+/* ویرایش وظیفه */
+.task-edit-box{
+  background: rgba(34,48,62,.03);
+  border: 1px solid rgba(34,48,62,.08);
+  border-radius: 12px;
+}
+
+/* بجت روزهای باقی‌مانده */
+.due-remaining{
+  font-size: 11px;
+  padding: .25rem .45rem;
+}
+
+
+/* صفحات احراز هویت */
+.auth-body{
+  background: radial-gradient(1200px 600px at 20% 10%, rgba(105,108,255,.12), transparent 60%),
+              radial-gradient(900px 500px at 80% 90%, rgba(105,108,255,.10), transparent 55%),
+              #f8fafc;
+  min-height: 100vh;
+}
+.auth-wrap{
+  min-height: 100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 24px;
+}
+.auth-card{
+  max-width: 520px;
+  width: 100%;
+  border: 1px solid rgba(34,48,62,.08);
+  border-radius: 18px;
+}
+.brand-dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 6px rgba(105,108,255,.15);
+}
+
+
+
+/* کارت وظیفه حرفه‌ای */
+.task-card{
+  position: relative;
+  border: 1px solid rgba(34,48,62,.10);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(34,48,62,.06);
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.task-card:hover{
+  transform: translateY(-1px);
+  border-color: rgba(105,108,255,.35);
+  box-shadow: 0 10px 26px rgba(34,48,62,.10);
+}
+.task-card .card-body{
+  padding: .75rem .85rem !important;
+}
+.task-title{
+  font-size: 14px;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.task-card .text-muted.small{
+  line-height: 1.6;
+}
+.task-actions .icon-btn{
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(34,48,62,.04);
+  border: 1px solid rgba(34,48,62,.08);
+}
+.task-actions .icon-btn:hover{
+  background: rgba(105,108,255,.08);
+  border-color: rgba(105,108,255,.25);
+}
+/* نوار اولویت (سمت راست در RTL) */
+.task-card::before{
+  content: "";
+  position: absolute;
+  top: 10px; bottom: 10px; left: 10px;
+  width: 4px;
+  border-radius: 4px;
+  background: rgba(108,117,125,.35);
+}
+.task-card.prio-1::before{ background: rgba(108,117,125,.45); }
+.task-card.prio-2::before{ background: rgba(255,193,7,.70); }
+.task-card.prio-3::before{ background: rgba(220,53,69,.75); }
+
+.task-status{ display: none; } /* وضعیت از ستون مشخص است */
+
+/* بجت‌ها کمی مینیمال‌تر */
+.task-card .badge{
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.assignee-badge{
+  background: rgba(13,202,240,.18) !important;
+  color: #0b6b79 !important;
+  border: 1px solid rgba(13,202,240,.25);
+}
+/* تاریخ */
+.due-date{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.due-date .due-date-text{ font-variant-numeric: tabular-nums; }
+
+
+/* جلوگیری از بیرون‌زدگی متن */
+.task-title, .task-desc, .assignee-badge{
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.task-desc{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.assignee-badge{
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.task-meta{ max-width: 100%; }
+.due-date{
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+.due-date-text{
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* نوار اولویت (سمت چپ کارت) */
+.task-card::before{
+  left: 10px;
+  right: auto;
+}
+
+
+.board-columns{
+    flex-direction: column !important;
+    direction: rtl;
+    gap: .75rem;
+  }
+  .kanban-col{
+    min-width: 100% !important;
+    width: 100%;
+  }
+  .kanban-col .task-list{
+    min-height: 20px;
+  }
+  /* دکمه‌ها و هدرها */
+  .kanban-col-header{
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
+    border-bottom: 1px solid rgba(34,48,62,.08);
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+  }
+}
+
+
+.board-columns{
+    flex-direction: column !important;
+    direction: rtl;
+    gap: .75rem;
+  }
+  .kanban-col{
+    min-width: 100% !important;
+    width: 100%;
+  }
+
+  /* هدر ستون: عنوان همیشه دیده شود */
+  .kanban-col-header{
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: #fff;
+    border-bottom: 1px solid rgba(34,48,62,.08);
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    padding: .65rem .75rem .35rem !important;
+  }
+  .kanban-col-header .d-flex.align-items-center.justify-content-between{
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: .5rem;
+  }
+  .kanban-col-header .d-flex.align-items-center.gap-2{
+    flex-wrap: wrap;
+    row-gap: .35rem;
+  }
+  .kanban-col-header .d-flex.align-items-center.gap-1{
+    justify-content: flex-start;
+  }
+  .kanban-col-header .fw-bold{
+    font-size: 14px;
+  }
+  .col-count{
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* کارت‌ها: متن و بجت‌ها بیرون نزند */
+  .task-card{ overflow: hidden; }
+  .task-card .card-body{ padding: .8rem .85rem !important; }
+  .task-card .d-flex.align-items-center.justify-content-between.mt-2{
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: .5rem;
+  }
+  .task-meta{
+    width: 100%;
+  }
+  .task-meta > *{
+    max-width: 100%;
+  }
+  .due-date{
+    width: 100%;
+    flex-wrap: wrap;
+    gap: .35rem;
+  }
+  .due-date-text{
+    max-width: 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+  .due-remaining{
+    margin-inline-start: .35rem !important;
+  }
+  .assignee-badge{
+    max-width: 100%;
+  }
+
+  /* دکمه افزودن وظیفه داخل ستون کمی بزرگ‌تر */
+  .add-task-btn{
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* اندازه ستون‌ها (Desktop) */
+@media (min-width: 577px){
+  .kanban-col{
+    min-width: 330px;
+    width: 330px;
+    max-width: 330px;
+  }
+}
+
+
+/* موبایل: ستون‌ها زیر هم (فقط موبایل) */
+@media (max-width: 576px){
+  .board-columns-wrap{
+    overflow-x: hidden;
+    padding: 0 .25rem;
+  }
+  .board-columns{
+    flex-direction: column !important;
+    gap: .75rem;
+  }
+  .kanban-col{
+    min-width: 100% !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* هدر ستون: خوانا و بدون sticky (تا تداخل ایجاد نشود) */
+  .kanban-col-header{
+    position: relative;
+    top: auto;
+    z-index: 1;
+    background: #fff;
+    border-bottom: 1px solid rgba(34,48,62,.08);
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    padding: .65rem .75rem .35rem !important;
+  }
+  .kanban-col-header > .d-flex{
+    flex-wrap: wrap;
+    gap: .5rem !important;
+  }
+  .kanban-col-header .fw-bold{
+    font-size: 14px;
+  }
+
+  /* کارت‌ها: متا زیر هم و کاملاً خوانا */
+  .task-card .d-flex.align-items-center.justify-content-between.mt-2{
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: .5rem;
+  }
+  .task-meta{
+    width: 100%;
+  }
+  .task-meta{ flex-wrap: wrap; }
+  .task-meta > *{ max-width: 100%; }
+
+  .due-date{
+    width: 100%;
+    flex-wrap: wrap;
+    gap: .35rem;
+  }
+  .due-date-text{
+    max-width: 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+  .assignee-badge{ max-width: 100%; }
+
+  /* دکمه افزودن وظیفه */
+  .add-task-btn{
+    width: 100%;
+    justify-content: center;
+  }
+}

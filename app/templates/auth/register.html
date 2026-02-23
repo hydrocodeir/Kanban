@@ -1,0 +1,33 @@
+{% extends "auth/layout.html" %}
+{% block content %}
+  <h5 class="fw-bold mb-1">ثبت‌نام</h5>
+  <div class="text-muted small mb-4">حساب جدید بسازید و بردهای خود را مدیریت کنید.</div>
+
+  <form method="post" action="/register" class="d-flex flex-column gap-3">
+    <div>
+      <label class="form-label small">نام و نام‌خانوادگی</label>
+      <input name="full_name" type="text" class="form-control" placeholder="مثال: علی رضایی" required autocomplete="name">
+    </div>
+    <div>
+      <label class="form-label small">ایمیل</label>
+      <input name="email" type="email" class="form-control" placeholder="name@example.com" required autocomplete="email">
+    </div>
+    <div>
+      <label class="form-label small">رمز عبور</label>
+      <input name="password" type="password" class="form-control" placeholder="حداقل ۶ کاراکتر" required autocomplete="new-password">
+    </div>
+    <div>
+      <label class="form-label small">تکرار رمز عبور</label>
+      <input name="password2" type="password" class="form-control" placeholder="••••••••" required autocomplete="new-password">
+    </div>
+
+    <button class="btn btn-primary w-100" type="submit">
+      ساخت حساب
+      <i class="bi bi-person-plus ms-1"></i>
+    </button>
+  </form>
+
+  <div class="d-flex justify-content-between mt-3">
+    <a class="small" href="/login">حساب دارید؟ ورود</a>
+  </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+<div class="col-12 col-md-6 col-lg-4 col-xl-3">
+  <div class="card app-card h-100">
+    <div class="card-body">
+      <div class="d-flex align-items-start justify-content-between">
+        <div>
+          <div class="fw-bold">{{ project.title }}</div>
+          <div class="text-muted small mt-1">{{ project.description if project.description else "بدون توضیح" }}</div>
+        </div>
+        <span class="badge rounded-pill text-bg-light">پروژه</span>
+      </div>
+
+      <div class="d-flex gap-2 mt-3 justify-content-end">
+        <a href="/projects/{{ project.id }}" class="btn btn-sm btn-primary rounded-pill">
+          ورود به برد
+          <i class="bi bi-arrow-left-short"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
