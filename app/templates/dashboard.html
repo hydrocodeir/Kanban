@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="row g-0">
+    <aside class="col-12 col-md-2 bg-dark text-white min-vh-100 p-3">
+      <h2 class="h5">داشبورد کانبان</h2>
+      <p>نقش شما: <span class="badge text-bg-info">{{ 'مدیر' if user.role == 'admin' else 'کاربر' }}</span></p>
+      <form hx-post="/preferences/theme" hx-swap="none" class="mb-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="enabled" value="{{ 0 if user.dark_mode else 1 }}">
+        <button class="btn btn-outline-light btn-sm w-100">{{ 'روشن' if user.dark_mode else 'تاریک' }}</button>
+      </form>
+      <form method="post" action="/logout">
+        <button class="btn btn-outline-warning btn-sm w-100">خروج</button>
+      </form>
+    </aside>
+    <main class="col-12 col-md-10 p-4">
+      {% for item in board_data %}
+      <section class="mb-4">
+        <h3 class="h5">{{ item.board.title }}</h3>
+        <div class="row g-3">
+          {% for col in item.columns %}
+          <div class="col-12 col-lg-4">
+            <div class="card shadow-sm"><div class="card-header">{{ col.column.title }}</div><div class="card-body">
+              {% for task in col.tasks %}
+              <article class="kanban-task mb-2 p-2 border rounded">
+                <strong>{{ task.title }}</strong>
+                <div class="small text-muted">{{ task.description }}</div>
+                <span class="badge text-bg-secondary">{{ task.priority }}</span>
+              </article>
+              {% else %}
+                <div class="text-muted">بدون وظیفه</div>
+              {% endfor %}
+            </div></div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% else %}
+      <div class="alert alert-info">بوردی وجود ندارد. از API برای ساخت بورد استفاده کنید.</div>
+      {% endfor %}
+    </main>
+  </div>
+</div>
+{% endblock %}
